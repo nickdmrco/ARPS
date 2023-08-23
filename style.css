@@ -790,7 +790,7 @@ img.octagon {
     letter-spacing: normal;
 }
 .navbar.fixed .navbar-brand img {
-    height: 30px !important;
+    /* height: 30px !important; */
     width: auto !important;
 }
 .navbar-nav.sm-collapsible .dropdown-menu .dropdown-menu {
@@ -1051,7 +1051,7 @@ img.octagon {
     background: #98bec8
 }
 .btn.btn-ice {
-    background: #9eb9d7
+    background: #7EA681
 }
 .btn.btn-sky {
     background: #4ca6e5
@@ -1119,9 +1119,9 @@ img.octagon {
     color: #98bec8;
 }
 .btn.btn-border.btn-ice {
-    border-color: #9eb9d7;
+    border-color: #7EA681;
     background: none;
-    color: #9eb9d7;
+    color: #7EA681;
 }
 .btn.btn-border.btn-sky {
     border-color: #4ca6e5;
@@ -1344,7 +1344,7 @@ img.octagon {
 .btn.btn-border.btn-ice:focus,
 .btn.btn-border.btn-ice:active,
 .btn.btn-border.btn-ice.active {
-    background: #9eb9d7;
+    background: #7EA681;
     color: #FFF;
 }
 .btn.btn-border.btn-sky:hover,
@@ -5277,7 +5277,7 @@ footer.inverse-text p {
 .color-ice,
 .list-ice>li:before,
 .list-ice i {
-    color: #9eb9d7 !important;
+    color: #7EA681 !important;
 }
 .color-sky,
 .list-sky>li:before,
@@ -5364,7 +5364,7 @@ list-blue i {
     background-color: #98bec8 !important;
 }
 .bg-ice {
-    background-color: #9eb9d7 !important;
+    background-color: #7EA681 !important;
 }
 .bg-sky {
     background-color: #4ca6e5 !important;
@@ -5419,7 +5419,7 @@ list-blue i {
     border-color: #98bec8 !important;
 }
 .border-ice {
-    border-color: #9eb9d7 !important;
+    border-color: #7EA681 !important;
 }
 .border-sky {
     border-color: #4ca6e5 !important;
@@ -5471,7 +5471,7 @@ list-blue i {
     stroke: #98bec8 !important;
 }
 .progressbar.ice svg path:last-child {
-    stroke: #9eb9d7 !important;
+    stroke: #7EA681 !important;
 }
 .progressbar.sky svg path:last-child {
     stroke: #4ca6e5 !important;
@@ -5520,7 +5520,7 @@ list-blue i {
     border-color: #98bec8 !important;
 }
 .progressbar.border.ice {
-    border-color: #9eb9d7 !important;
+    border-color: #7EA681 !important;
 }
 .progressbar.border.sky {
     border-color: #4ca6e5 !important;
@@ -5572,7 +5572,7 @@ list-blue i {
     color: #98bec8 !important;
 }
 .circle.ice .progressbar-text {
-    color: #9eb9d7 !important;
+    color: #7EA681 !important;
 }
 .circle.sky .progressbar-text {
     color: #4ca6e5 !important;
