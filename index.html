@@ -202,85 +202,37 @@
       <div class="space40"></div>
       <div id="cube-grid-filter" class="cbp-filter-container text-center">
         <div data-filter="*" class="cbp-filter-item-active cbp-filter-item">All</div>
-        <div data-filter=".wedding" class="cbp-filter-item">Love Stories</div>
+        <div data-filter=".love" class="cbp-filter-item">Love Stories</div>
         <div data-filter=".portrait" class="cbp-filter-item">Portraits</div>
         <div data-filter=".graduation" class="cbp-filter-item">Graduation</div>
       </div>
       <div class="clearfix"></div>
       <div class="space20"></div>
-      <div id="cube-grid" class="cbp light-gallery">
-        <div class="cbp-item conceptual portrait">
+      <div id="cube-grid" class="cbp light-gallery galleryRender">
+        <!-- <div class="cbp-item conceptual portrait">
           <figure class="overlay overlay2"><a href="style/images/Photos/portraits/tori.jpeg" data-sub-html="#caption1"><img src="style/images/Photos/portraits/tori.jpeg" alt="" />
             <div id="caption1" class="d-none">
               <p>Cras mattis consectetur purus sit amet fermentum.</p>
             </div>
             </a></figure>
-        </div>
+        </div> -->
         <!--/.cbp-item -->
-        <div class="cbp-item graduation">
+        <!-- <div class="cbp-item graduation hidden">
           <figure class="overlay overlay2"><a href="style/images/Photos/graduation/paulgrad2.jpg"><img src="style/images/Photos/graduation/paulgrad2.jpg" alt="" /></a></figure>
-        </div>
+        </div> -->
         <!--/.cbp-item -->
-        <div class="cbp-item portrait macro">
+        <!-- <div class="cbp-item portrait macro">
           <figure class="overlay overlay2"><a href="style/images/Photos/portraits/randombich.jpg" data-sub-html="#caption2"><img src="style/images/Photos/portraits/randombich.jpg" alt="" />
             <div id="caption2" class="d-none">
               <p>Nulla vitae elit libero, a pharetra augue.</p>
             </div>
             </a></figure>
-        </div>
-        <!--/.cbp-item -->
-        <div class="cbp-item conceptual graduation">
-          <figure class="overlay overlay2"><a href="style/images/Photos/graduation/Karissagrad1.jpg"><img src="style/images/Photos/graduation/Karissagrad1.jpg" alt="" /></a></figure>
-        </div>
-        <!--/.cbp-item -->
-        <div class="cbp-item portrait">
-          <figure class="overlay overlay2"><a href="style/images/Photos/portraits/brooke1.jpg"><img src="style/images/Photos/portraits/brooke1.jpg" alt="" /></a></figure>
-        </div>
-        <!--/.cbp-item -->
-        <div class="cbp-item wedding macro">
-          <figure class="overlay overlay2"><a href="style/images/Photos/weddings/prop1.jpg"><img src="style/images/Photos/weddings/prop1.jpg" alt="" /></a></figure>
-        </div>
-        <!--/.cbp-item -->
-        <div class="cbp-item graduation">
-          <figure class="overlay overlay2"><a href="style/images/Photos/graduation/madsgrad1.jpg"><img src="style/images/Photos/graduation/madsgrad1.jpg" alt="" /></a></figure>
-        </div>
-        <!--/.cbp-item -->
-        <div class="cbp-item conceptual portrait">
-          <figure class="overlay overlay2"><a href="style/images/Photos/portraits/eden1.jpg"><img src="style/images/Photos/portraits/eden1.jpg" alt="" /></a></figure>
-        </div>
-        <!--/.cbp-item -->
-        <div class="cbp-item wedding video">
-          <figure class="overlay overlay2"><a href="style/images/Photos/weddings/prop2.jpg"><img src="style/images/Photos/weddings/prop2.jpg" alt="" /></a></figure>
-        </div>
-        <!--/.cbp-item -->
-        <div class="cbp-item conceptual graduation">
-          <figure class="overlay overlay2"><a href="style/images/Photos/graduation/paulgrad1.jpg"><img src="style/images/Photos/graduation/paulgrad1.jpg" alt="" /></a></figure>
-        </div>
-        <!--/.cbp-item -->
-        <div class="cbp-item portrait macro">
-          <figure class="overlay overlay2"><a href="style/images/Photos/portraits/emma1.jpg"><img src="style/images/Photos/portraits/emma1.jpg" alt="" /></a></figure>
-        </div>
-        <!--/.cbp-item -->
-        <div class="cbp-item interior wedding">
-          <figure class="overlay overlay2"><a href="style/images/Photos/weddings/prop3.jpg"><img src="style/images/Photos/weddings/prop3.jpg" alt="" /></a></figure>
-        </div>
-        <!--/.cbp-item -->
-        <div class="cbp-item conceptual graduation">
-          <figure class="overlay overlay2"><a href="style/images/Photos/graduation/YosGrad1.jpg"><img src="style/images/Photos/graduation/YosGrad1.jpg" alt="" /></a></figure>
-        </div>
-        <!--/.cbp-item -->
-        <div class="cbp-item portrait video macro">
-          <figure class="overlay overlay2"><a href="style/images/Photos/portraits/Jule.jpg"><img src="style/images/Photos/portraits/Jule.jpg" alt="" /></a></figure>
-        </div>
-        <!--/.cbp-item -->
-        <div class="cbp-item interior wedding">
-          <figure class="overlay overlay2"><a href="style/images/Photos/weddings/prop4.jpg"><img src="style/images/Photos/weddings/prop4.jpg" alt="" /></a></figure>
-        </div>
-        <!--/.cbp-item -->
-        <div class="cbp-item graduation macro">
-          <figure class="overlay overlay2"><a href="style/images/Photos/graduation/Karissagrad2.jpg"><img src="style/images/Photos/graduation/Karissagrad2.jpg" alt="" /></a></figure>
-        </div>
-        <!--/.cbp-item --> 
+        </div> -->
+       
+
+
+
+
       </div>
     </div>
     <!-- /.container --> 
@@ -373,5 +325,66 @@
 <script src="style/revolution/js/extensions/revolution.extension.video.min.js"></script>
 <script src="style/js/plugins.js"></script> 
 <script src="style/js/scripts.js"></script>
+<script>
+  // Define an array of objects containing folder paths and number of photos for each folder
+  const folderData = [
+    { folderPath: "style/images/Photos/portrait/", folderClass: "portrait", numberOfPhotos: 13 },
+    { folderPath: "style/images/Photos/graduation/", folderClass: "graduation", numberOfPhotos: 12 },
+    { folderPath: "style/images/Photos/love/", folderClass: "love", numberOfPhotos: 8 }
+  ];
+
+  // Function to shuffle array elements (Fisher-Yates algorithm)
+  function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
+
+  // Function to create and append elements for each photo
+  function renderPhotos() {
+    const gallery = document.querySelector(".galleryRender");
+    const allPhotoPaths = [];
+
+    folderData.forEach(folderInfo => {
+      const { folderPath, folderClass, numberOfPhotos } = folderInfo;
+
+      for (let i = 1; i <= numberOfPhotos; i++) {
+        const photoNumber = i.toString().padStart(3, '0');
+        const photoPath = folderPath + `${folderClass}${photoNumber}.jpg`;
+        allPhotoPaths.push({ path: photoPath, class: folderClass });
+      }
+    });
+
+    const shuffledPhotoPaths = shuffleArray(allPhotoPaths);
+
+    shuffledPhotoPaths.forEach(photo => {
+      const { path, class: folderClass } = photo;
+
+      const cbpItem = document.createElement("div");
+      cbpItem.classList.add("cbp-item", "conceptual", folderClass);
+
+      const figure = document.createElement("figure");
+      figure.classList.add("overlay", "overlay2");
+
+      const link = document.createElement("a");
+      link.href = path;
+
+      const img = document.createElement("img");
+      img.src = path;
+      img.alt = "";
+
+      link.appendChild(img);
+      figure.appendChild(link);
+      cbpItem.appendChild(figure);
+
+      gallery.appendChild(cbpItem);
+    });
+  }
+
+  // Call the function to render photos when the page loads
+  window.onload = renderPhotos;
+</script>
 </body>
 </html>
