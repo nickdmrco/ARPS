@@ -452,7 +452,11 @@
           <div class="container inner pt-30 pb-30 text-center">
             <p>© 2023 AR Photo Studio. All rights reserved.</p>
             <!-- <a href="https://denyk.com/">DS</a>  -->
-            <p id="days-counter" style="opacity: 0.3;"> </p>
+            <p id="days-counter" style="opacity: 0.3;"> 
+              <i class="fa fa-sun-o" aria-hidden="true"></i>
+        <span id="days-number"> </span>
+        <i class="fa fa-moon-o" aria-hidden="true"></i>
+            </p>
           </div>
           <!-- /.container -->
         </div>
@@ -480,14 +484,22 @@
     <script src="style/js/scripts.js"></script>
     <script>
       function calculateDaysSince() {
-          const startDate = new Date("2024-11-26");
-          const today = new Date();
-          const diffTime = today - startDate;
-          const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+          const startDate = new Date("2024-11-26T06:30:00"); // Start at 6:30 AM
+          const now = new Date();
+          const diffTime = now - startDate;
+          const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)); // Convert ms to days
           return diffDays >= 0 ? diffDays : 0;
       }
 
-      document.getElementById("days-counter").textContent = "DS" + calculateDaysSince();
+      function updateCounter() {
+          document.getElementById("days-number").textContent = "~ " + calculateDaysSince() + " ~";
+      }
+
+      // Run the counter initially
+      updateCounter();
+
+      // Update the counter every hour to keep it accurate (optional redundancy)
+      setInterval(updateCounter, 1000 * 60 * 60);
   </script>
     <!-- <script>
   const folderData = [
