@@ -451,7 +451,8 @@
         <div class="sub-footer dark-wrapper inverse-text">
           <div class="container inner pt-30 pb-30 text-center">
             <p>© 2023 AR Photo Studio. All rights reserved.</p>
-            <a href="https://denyk.com/">Denyk Digital</a>
+            <!-- <a href="https://denyk.com/">DS</a>  -->
+            <p id="days-counter"> </p>
           </div>
           <!-- /.container -->
         </div>
@@ -477,6 +478,17 @@
     <script src="style/revolution/js/extensions/revolution.extension.video.min.js"></script>
     <script src="style/js/plugins.js"></script>
     <script src="style/js/scripts.js"></script>
+    <script>
+      function calculateDaysSince() {
+          const startDate = new Date("2024-11-27");
+          const today = new Date();
+          const diffTime = today - startDate;
+          const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+          return diffDays >= 0 ? diffDays : 0;
+      }
+
+      document.getElementById("days-counter").textContent = "DS" + calculateDaysSince();
+  </script>
     <!-- <script>
   const folderData = [
     { folderPath: "style/images/Photos/portrait/", folderClass: "portrait", numberOfPhotos: 13 },
