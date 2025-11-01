@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+  <meta charset="utf-8" />
+  <title>SHA-256 Hash Helper</title>
+  <style>
+    body{font:14px/1.4 system-ui,Segoe UI,Roboto,Arial;padding:20px;max-width:700px;margin:auto}
+    input{padding:8px 10px;width:100%;margin:8px 0}
+    code{word-break:break-all;display:block;background:#f6f7f8;padding:10px;border-radius:8px}
+  </style>
+  <h1>SHA-256 Hash Helper</h1>
+  <p>Enter your password. Copy the hex hash and paste into <code>PASSWORD_HASH</code> in <code>index.html</code>.</p>
+  <input id="pw" type="password" placeholder="Password" />
+  <code id="out"></code>
+  <script>
+    async function sha256Hex(str){
+      const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+      return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");
+    }
+    const pw = document.getElementById('pw');
+    const out = document.getElementById('out');
+    pw.addEventListener('input', async ()=>{ out.textContent = await sha256Hex(pw.value || ""); });
+  </script>
+</html>

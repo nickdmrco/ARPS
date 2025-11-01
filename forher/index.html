@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Daily Journal</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <meta http-equiv="Cache-Control" content="no-store" />
+  <style>
+    :root { --wrap: 820px; --muted:#9aa2ad; --fg:#eaeef3; --bg:#0f141a; --card:#151b23; --border:#232b36; --accent:#30a1ff; }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body { margin: 0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background: var(--bg); color: var(--fg); }
+    .wrap { max-width: var(--wrap); margin: 0 auto; padding: 32px 16px 48px; }
+    h1 { font-size: 1.4rem; margin: 0 0 16px; font-weight: 600; }
+    .toolbar { display: grid; grid-template-columns: 1fr auto auto; gap: 12px; align-items: center; margin-bottom: 16px; }
+    .date { font-weight: 600; letter-spacing: .2px; }
+    .controls { display: flex; gap: 8px; }
+    button { background: var(--card); color: var(--fg); border: 1px solid var(--border); border-radius: 10px; padding: 8px 12px; cursor: pointer; }
+    button:hover { border-color:#3a4556; }
+    input[type=date] { background: var(--card); color: var(--fg); border: 1px solid var(--border); border-radius: 10px; padding: 8px 12px; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 18px; }
+    .muted { color: var(--muted); }
+    .empty { color: var(--muted); font-style: italic; }
+    .entry { line-height: 1.6; white-space: pre-wrap; }
+    .entry h2 { font-size:1.2rem; margin: 1rem 0 .4rem; }
+    .entry h3 { font-size:1.05rem; margin: .9rem 0 .3rem; }
+    .entry ul, .entry ol { margin: .5rem 0 .5rem 1.25rem; }
+    .entry strong { font-weight: 600; }
+    .entry em { font-style: italic; }
+    .footer { margin-top: 16px; font-size: .9rem; color: var(--muted); display:flex; justify-content: space-between; align-items:center; }
+    .footer a { color: var(--muted); text-decoration: none; border-bottom: 1px dotted var(--border); }
+
+    /* Password overlay */
+    .overlay { position: fixed; inset: 0; display: grid; place-items: center; background: rgba(0,0,0,.65); backdrop-filter: blur(3px); z-index: 5; }
+    .panel { width: min(92vw, 420px); background: var(--card); border:1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,.35); }
+    .panel h2 { margin: 0 0 6px; font-size: 1.15rem; }
+    .field { display:flex; gap:8px; margin-top: 10px; }
+    .field input[type=password] { flex:1; background: #0f141a; color: var(--fg); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; }
+    .error { color: #ff8a8a; font-size: .9rem; margin-top: 6px; min-height: 1.2em; }
+    .hint { color: var(--muted); font-size: .9rem; margin-top: 8px; }
+
+    /* Hide content until unlocked */
+    body.locked .wrap { visibility: hidden; }
+  </style>
+</head>
+<body class="locked">
+  <!-- Password Overlay -->
+  <div class="overlay" id="lock">
+    <div class="panel">
+      <h2>Enter Password</h2>
+      <div class="field">
+        <input id="pw" type="password" placeholder="Password" autocomplete="current-password" />
+        <button id="enterBtn">Unlock</button>
+      </div>
+      <div id="err" class="error"></div>
+      <div class="hint">Access persists for this tab until it’s closed.</div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <h1>Daily Journal</h1>
+
+    <div class="toolbar">
+      <div class="date" id="dateText">—</div>
+      <input id="datePicker" type="date" />
+      <div class="controls">
+        <button id="prevBtn" aria-label="Previous Day">← Prev</button>
+        <button id="nextBtn" aria-label="Next Day">Next →</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div id="entry" class="entry empty">Loading…</div>
+    </div>
+
+    <div class="footer">
+      <div id="meta" class="muted">0 words</div>
+      <a id="srcLink" href="#" target="_blank" rel="noopener">data/journal.json</a>
+    </div>
+  </div>
+
+  <script>
+    // ===== Password Gate (SHA-256 hash compare) =====
+    const PASSWORD_HASH = "0a6a7a6c6c9a2b0a5f3e6f2f1a06b1b8a7e5c0f1b6b5a4a397f3b2c1a0e9d8c7"; // <-- replace with your hash
+    const SESSION_KEY = "journal.unlocked";
+
+    async function sha256Hex(str){
+      const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+      return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");
+    }
+
+    function unlockUI(){
+      document.body.classList.remove("locked");
+      document.getElementById("lock").style.display = "none";
+      sessionStorage.setItem(SESSION_KEY, "1");
+    }
+
+    async function checkUnlock(){
+      if (sessionStorage.getItem(SESSION_KEY) === "1") { unlockUI(); return; }
+      const pwInput = document.getElementById("pw");
+      const err = document.getElementById("err");
+      const enterBtn = document.getElementById("enterBtn");
+      async function tryUnlock(){
+        const hash = await sha256Hex(pwInput.value || "");
+        if (hash === PASSWORD_HASH){ unlockUI(); init(); }
+        else { err.textContent = "Incorrect password"; pwInput.select(); }
+      }
+      enterBtn.addEventListener("click", tryUnlock);
+      pwInput.addEventListener("keydown", e=>{ if(e.key==="Enter") tryUnlock(); });
+      pwInput.focus();
+    }
+
+    // ===== Journal Reader =====
+    const entryEl = document.getElementById('entry');
+    const metaEl = document.getElementById('meta');
+    const dateText = document.getElementById('dateText');
+    const picker = document.getElementById('datePicker');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const srcLink = document.getElementById('srcLink');
+
+    const fmt = (d)=> new Date(d.getTime() - d.getTimezoneOffset()*60000).toISOString().slice(0,10);
+    const parse = (s)=> new Date(s + 'T00:00:00');
+    const nice = (s)=> new Date(s).toLocaleDateString(undefined,{ weekday:'long', year:'numeric', month:'long', day:'numeric'});
+
+    function md(str=""){
+      let html = str
+        .replace(/^### (.*)$/gm,'<h3>$1</h3>')
+        .replace(/^## (.*)$/gm,'<h2>$1</h2>')
+        .replace(/^# (.*)$/gm,'<h2>$1</h2>')
+        .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g,'<em>$1</em>');
+      html = html.replace(/^(?:[-*])\s+(.*)$/gm,'<li>$1</li>');
+      html = html.replace(/(<li>.*<\/li>\n?)+/g,(m)=>`<ul>${m}</ul>`);
+      html = html.replace(/^\d+\.\s+(.*)$/gm,'<li>$1</li>');
+      html = html.replace(/(<li>.*<\/li>\n?)+/g,(m)=> m.includes('<ul>')? m : `<ol>${m}</ol>`);
+      return html;
+    }
+
+    async function loadData(){
+      const res = await fetch('data/journal.json?d=' + Date.now(), { cache: 'no-store' });
+      const data = await res.json();
+      srcLink.href = 'data/journal.json?d=' + Date.now();
+      return data;
+    }
+
+    function findEntry(data, dateStr){
+      return data.entries.find(e => e.date === dateStr);
+    }
+
+    function render(data, dateStr){
+      picker.value = dateStr;
+      dateText.textContent = nice(dateStr);
+      const e = findEntry(data, dateStr);
+      if(!e){
+        entryEl.classList.add('empty');
+        entryEl.innerHTML = 'No entry for this date.';
+        metaEl.textContent = '0 words';
+        return;
+      }
+      entryEl.classList.remove('empty');
+      entryEl.innerHTML = md(e.body || '');
+      const words = (e.body||'').trim().split(/\s+/).filter(Boolean).length;
+      metaEl.textContent = `${words} ${words===1?'word':'words'}`;
+    }
+
+    async function init(){
+      const data = await loadData();
+      const today = fmt(new Date());
+      picker.max = today;
+      picker.addEventListener('change', () => render(data, picker.value));
+      prevBtn.addEventListener('click', () => {
+        const d = parse(picker.value); d.setDate(d.getDate()-1); render(data, fmt(d));
+      });
+      nextBtn.addEventListener('click', () => {
+        const d = parse(picker.value); d.setDate(d.getDate()+1); render(data, fmt(d));
+      });
+      render(data, today);
+    }
+
+    // Boot
+    (async ()=>{ await checkUnlock(); if (sessionStorage.getItem(SESSION_KEY)==='1') { init(); } })();
+  </script>
+</body>
+</html>
