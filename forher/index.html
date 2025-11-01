@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex">
   <title>Daily Journal</title>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
@@ -19,7 +20,7 @@
     .controls { display: flex; gap: 8px; }
     button { background: var(--card); color: var(--fg); border: 1px solid var(--border); border-radius: 10px; padding: 8px 12px; cursor: pointer; }
     button:hover { border-color:#3a4556; }
-    input[type=date] { background: var(--card); color: var(--fg); border: 1px solid var(--border); border-radius: 10px; padding: 8px 12px; }
+    input[type=date], input[type=text] { background: var(--card); color: var(--fg); border: 1px solid var(--border); border-radius: 10px; padding: 8px 12px; }
     .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 18px; }
     .muted { color: var(--muted); }
     .empty { color: var(--muted); font-style: italic; }
@@ -31,6 +32,20 @@
     .entry em { font-style: italic; }
     .footer { margin-top: 16px; font-size: .9rem; color: var(--muted); display:flex; justify-content: space-between; align-items:center; }
     .footer a { color: var(--muted); text-decoration: none; border-bottom: 1px dotted var(--border); }
+
+    /* Archive */
+    .archive { margin-top: 28px; }
+    .archive h2 { font-size: 1.1rem; margin: 0 0 10px; }
+    .archive .search { margin: 10px 0 14px; display:flex; gap:10px; }
+    details { background: var(--card); border:1px solid var(--border); border-radius: 12px; margin-bottom: 10px; }
+    details > summary { cursor: pointer; list-style: none; padding: 10px 12px; font-weight: 600; outline: none; }
+    details > summary::-webkit-details-marker { display: none; }
+    .list { padding: 4px 6px 10px; }
+    .row { display:flex; gap:10px; align-items:center; justify-content: space-between; padding: 8px 10px; border-radius: 10px; }
+    .row:hover { background: rgba(255,255,255,0.03); }
+    .row .date { font-weight: 600; }
+    .row .snippet { color: var(--muted); font-size: .92rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 70%; }
+    .row button { border: 1px solid var(--border); }
 
     /* Password overlay */
     .overlay { position: fixed; inset: 0; display: grid; place-items: center; background: rgba(0,0,0,.65); backdrop-filter: blur(3px); z-index: 5; }
@@ -62,6 +77,7 @@
   <div class="wrap">
     <h1>Daily Journal</h1>
 
+    <!-- Top reader -->
     <div class="toolbar">
       <div class="date" id="dateText">—</div>
       <input id="datePicker" type="date" />
@@ -79,24 +95,32 @@
       <div id="meta" class="muted">0 words</div>
       <a id="srcLink" href="#" target="_blank" rel="noopener">data/journal.json</a>
     </div>
+
+    <!-- Archive list -->
+    <div class="archive" id="archive">
+      <h2>Archive</h2>
+      <div class="search">
+        <input id="searchInput" type="text" placeholder="Search text…" />
+        <button id="clearSearch">Clear</button>
+      </div>
+      <div id="archiveMount"></div>
+    </div>
   </div>
 
   <script>
     // ===== Password Gate (SHA-256 hash compare) =====
-    const PASSWORD_HASH = "0a6a7a6c6c9a2b0a5f3e6f2f1a06b1b8a7e5c0f1b6b5a4a397f3b2c1a0e9d8c7"; // <-- replace with your hash
+    const PASSWORD_HASH = "7c180e3e3bee93dde4c28a4999b4cc3604ee53524c3b245485d41ac36d478c82";
     const SESSION_KEY = "journal.unlocked";
 
     async function sha256Hex(str){
       const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
       return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");
     }
-
     function unlockUI(){
       document.body.classList.remove("locked");
       document.getElementById("lock").style.display = "none";
       sessionStorage.setItem(SESSION_KEY, "1");
     }
-
     async function checkUnlock(){
       if (sessionStorage.getItem(SESSION_KEY) === "1") { unlockUI(); return; }
       const pwInput = document.getElementById("pw");
@@ -112,7 +136,7 @@
       pwInput.focus();
     }
 
-    // ===== Journal Reader =====
+    // ===== Journal Reader + Archive =====
     const entryEl = document.getElementById('entry');
     const metaEl = document.getElementById('meta');
     const dateText = document.getElementById('dateText');
@@ -120,6 +144,9 @@
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
     const srcLink = document.getElementById('srcLink');
+    const archiveMount = document.getElementById('archiveMount');
+    const searchInput = document.getElementById('searchInput');
+    const clearSearch = document.getElementById('clearSearch');
 
     const fmt = (d)=> new Date(d.getTime() - d.getTimezoneOffset()*60000).toISOString().slice(0,10);
     const parse = (s)=> new Date(s + 'T00:00:00');
@@ -143,41 +170,112 @@
       const res = await fetch('data/journal.json?d=' + Date.now(), { cache: 'no-store' });
       const data = await res.json();
       srcLink.href = 'data/journal.json?d=' + Date.now();
+      // Sort entries descending by date for archive/list
+      data.entries.sort((a,b) => (a.date < b.date ? 1 : -1));
       return data;
     }
 
-    function findEntry(data, dateStr){
-      return data.entries.find(e => e.date === dateStr);
-    }
-
-    function render(data, dateStr){
+    function show(data, dateStr, pushHash=true){
       picker.value = dateStr;
       dateText.textContent = nice(dateStr);
-      const e = findEntry(data, dateStr);
+      const e = data.entries.find(x => x.date === dateStr);
       if(!e){
         entryEl.classList.add('empty');
         entryEl.innerHTML = 'No entry for this date.';
         metaEl.textContent = '0 words';
-        return;
+      } else {
+        entryEl.classList.remove('empty');
+        entryEl.innerHTML = md(e.body || '');
+        const words = (e.body||'').trim().split(/\s+/).filter(Boolean).length;
+        metaEl.textContent = `${words} ${words===1?'word':'words'}`;
       }
-      entryEl.classList.remove('empty');
-      entryEl.innerHTML = md(e.body || '');
-      const words = (e.body||'').trim().split(/\s+/).filter(Boolean).length;
-      metaEl.textContent = `${words} ${words===1?'word':'words'}`;
+      if (pushHash) history.replaceState(null, "", "#" + dateStr);
+      // Scroll to top so the main entry is visible after clicking an archive item
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function step(data, days){
+      const d = parse(picker.value);
+      d.setDate(d.getDate()+days);
+      show(data, fmt(d));
+    }
+
+    function monthKey(iso){
+      const d = parse(iso);
+      return d.toLocaleDateString(undefined, { year:'numeric', month:'long' }); // e.g., "November 2025"
+    }
+
+    function buildArchive(data, filterText=""){
+      const q = filterText.trim().toLowerCase();
+      const groups = new Map();
+      for (const e of data.entries){
+        if (q && !(e.date.toLowerCase().includes(q) || (e.body||'').toLowerCase().includes(q))) continue;
+        const key = monthKey(e.date);
+        if (!groups.has(key)) groups.set(key, []);
+        groups.get(key).push(e);
+      }
+      archiveMount.innerHTML = "";
+      for (const [month, arr] of groups){
+        const details = document.createElement('details');
+        const openLatest = (filterText ? true : (archiveMount.childElementCount === 0)); // open first group by default or when searching
+        if (openLatest) details.setAttribute('open', '');
+        const summary = document.createElement('summary');
+        summary.textContent = `${month} (${arr.length})`;
+        details.appendChild(summary);
+
+        const list = document.createElement('div'); list.className = 'list';
+        for (const e of arr){
+          const row = document.createElement('div'); row.className = 'row';
+          const left = document.createElement('div');
+          const dspan = document.createElement('span'); dspan.className = 'date'; dspan.textContent = e.date;
+          const sspan = document.createElement('span'); sspan.className = 'snippet';
+          const firstLine = (e.body||'').split('\n').find(Boolean) || '';
+          sspan.textContent = firstLine.length > 80 ? firstLine.slice(0,77) + '…' : firstLine;
+          left.appendChild(dspan); left.appendChild(document.createTextNode(' ')); left.appendChild(sspan);
+          const btn = document.createElement('button'); btn.textContent = 'Open';
+          btn.addEventListener('click', ()=> show(data, e.date));
+          row.appendChild(left); row.appendChild(btn);
+          list.appendChild(row);
+        }
+        details.appendChild(list);
+        archiveMount.appendChild(details);
+      }
+
+      if (!archiveMount.childElementCount){
+        const none = document.createElement('div');
+        none.className = 'muted';
+        none.textContent = 'No entries match your search.';
+        archiveMount.appendChild(none);
+      }
+    }
+
+    function initHashRouting(data){
+      const hash = (location.hash || '').replace('#','');
+      const available = new Set(data.entries.map(e=>e.date));
+      if (hash && available.has(hash)){
+        show(data, hash, false);
+      } else {
+        show(data, fmt(new Date()), false);
+      }
     }
 
     async function init(){
       const data = await loadData();
-      const today = fmt(new Date());
-      picker.max = today;
-      picker.addEventListener('change', () => render(data, picker.value));
-      prevBtn.addEventListener('click', () => {
-        const d = parse(picker.value); d.setDate(d.getDate()-1); render(data, fmt(d));
-      });
-      nextBtn.addEventListener('click', () => {
-        const d = parse(picker.value); d.setDate(d.getDate()+1); render(data, fmt(d));
-      });
-      render(data, today);
+      // date picker limits
+      picker.max = fmt(new Date());
+      picker.min = data.entries.length ? data.entries[data.entries.length-1].date : "";
+      // events
+      picker.addEventListener('change', () => show(data, picker.value));
+      prevBtn.addEventListener('click', () => step(data, -1));
+      nextBtn.addEventListener('click', () => step(data, +1));
+      searchInput.addEventListener('input', () => buildArchive(data, searchInput.value));
+      clearSearch.addEventListener('click', () => { searchInput.value=''; buildArchive(data, ''); });
+
+      // archive
+      buildArchive(data, '');
+
+      // initial view (supports #YYYY-MM-DD)
+      initHashRouting(data);
     }
 
     // Boot

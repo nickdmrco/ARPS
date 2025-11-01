@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /forher/
+
+# Example: Allow bots to crawl everything else.
+# You can also add your sitemap location.
