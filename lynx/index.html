@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="text" content="">
+<meta name="author" content="">
+<link rel="shortcut icon" href="style/images/logo-light.webp">
+<title>Abrielle Rounds Photography</title>
+<link rel="stylesheet" type="text/css" href="style/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="style/css/plugins.css">
+<link rel="stylesheet" type="text/css" href="style/revolution/css/settings.css">
+<link rel="stylesheet" type="text/css" href="style/revolution/css/layers.css">
+<link rel="stylesheet" type="text/css" href="style/revolution/css/navigation.css">
+<link rel="stylesheet" type="text/css" href="style/revolution/revolution-addons/filmstrip/css/revolution.addon.filmstrip.css">
+<link rel="stylesheet" type="text/css" href="style/revolution/revolution-addons/typewriter/css/typewriter.css">
+<link rel="stylesheet" type="text/css" href="style/type/icons.css">
+<link rel="stylesheet" type="text/css" href="style.css">
+<link rel="stylesheet" type="text/css" href="style/css/color/blue.css">
+<link href='https://fonts.googleapis.com/css?family=Muli:300,300i,400,400i,600,600i,700,700i' rel='stylesheet' type='text/css'>
+</head>
+<style>
+   /* Password overlay */
+    .overlay { position: fixed; inset: 0; display: grid; place-items: center; background: rgba(0,0,0,.65); backdrop-filter: blur(3px); z-index: 5; }
+    .panel { width: min(92vw, 420px); background: var(--card); border:1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,.35); }
+    .panel h2 { margin: 0 0 6px; font-size: 1.15rem; }
+    .field { display:flex; gap:8px; margin-top: 10px; }
+    .field input[type=password] { flex:1; background: #0f141a; color: var(--fg); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; }
+    .error { color: #ff8a8a; font-size: .9rem; margin-top: 6px; min-height: 1.2em; }
+    .hint { color: var(--muted); font-size: .9rem; margin-top: 8px; }
+
+    /* Start hidden */
+.wrap {
+  opacity: 0;
+  transition: opacity 3s ease; /* Slow, smooth fade — adjust as needed */
+}
+
+/* After unlock */
+body.unlocked .wrap {
+  opacity: 1;
+}
+.overlay {
+  transition: opacity 1.2s ease;
+}
+
+
+</style>
+<body class="locked">
+  <!-- Password Overlay -->
+  <div class="overlay" id="lock">
+    <div class="panel">
+      <div class="field">
+        <input id="pw" type="password" placeholder="password" autocomplete="current-password" />
+        <button class="btn" style="background: none;" id="enterBtn">Open</button>
+      </div>
+      <div id="err" style="display: none;" class="error"></div>
+      <!-- <div class="hint">Access persists for this tab until it’s closed.</div> -->
+    </div>
+  </div>
+<div class="content-wrapper wrap">
+  <div class="d-flex align-items-start flex-column h-100vh inverse-text text-center">
+    <div class="mb-auto ml-auto mr-auto">
+      <div class="container inner pt-50 pb-30">
+        <div class="logo"> <a href="index.html"><img src="#" srcset="style/images/logo-light.webp 1x, style/images/logo-light.webp 2x" alt="" style="filter: invert();" /></a> </div>
+      </div>
+    </div>
+    <!-- /div -->
+    <div class="ml-auto mr-auto">
+      <div class="h-100 d-flex flex-column justify-content-center inverse-text p-90 p-sm-0 text-center">
+        <h1 class="heading text-center"> </h1>
+        <h2 class="sub-heading2"> 
+          <span id="days-counter">
+                      <!-- <span id="quote-of-the-day" style="font-style: italic; margin-top: 10px;"></span> -->
+                      <br>
+                      <i class="fa fa-sun-o" aria-hidden="true"></i>
+                      <span id="days-number"> </span>
+                      <i class="fa fa-moon-o" aria-hidden="true"></i>
+                    </span>
+
+                  </h2>
+                  <span id="quote-of-the-day" style="font-style: italic; margin-top: 10px;"></span>
+
+        <div class="space10"></div>
+        <!-- <div class="d-inline-block"><a href="mailto:abrielle.rounds@gmail.com"  class="btn btn-rounded btn-white btn-icon btn-icon-left"><i class="fa fa-envelope"></i>Contact Us</a></div> -->
+      </div>
+    </div>
+    <!-- /div -->
+    <div class="mt-auto ml-auto mr-auto w-100">
+      <div class="container inner pt-30 pb-40">
+        <div class="row">
+          <div class="col-lg-6 offset-lg-3 col-xl-6 offset-xl-3">
+            <div class="newsletter-wrapper">
+              <form action="https://elemisfreebies.us20.list-manage.com/subscribe/post?u=aa4947f70a475ce162057838d&amp;id=b49ef47a9a" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="hidden validate" target="_blank" novalidate>
+                <div id="mc_embed_signup_scroll" class="form-group">
+                  <input type="email" value="" name="EMAIL" class="email form-control" id="mce-EMAIL" placeholder="Email Address" required>
+                  <button type="submit" name="subscribe" id="mc-embedded-subscribe" class="btn btn-rounded btn-white mr-0 pull-right">Join</button>
+                  <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+                  <div style="position: absolute; left: -5000px;" aria-hidden="true">
+                    <input type="text" name="b_ddc180777a163e0f9f66ee014_056957de28" tabindex="-1" value="">
+                  </div>
+                  <div class="clearfix"></div>
+                </div>
+              </form>
+            </div>
+            <!-- /.newsletter-wrapper --> 
+          </div>
+          <!-- /column --> 
+        </div>
+        <!-- /.row -->
+        <div class="space10"></div>
+        <!-- <p>© 2023 Abrielle Rounds. All rights reserved.</p> -->
+        <!-- <ul class="social social-mute social-s">
+          <li><a target="_blank" href="https://www.instagram.com/abrirophotography/"><i class="fa fa-instagram"></i></a></li>
+        </ul> -->
+        <!-- /.social --> 
+      </div>
+      <!-- /.container --> 
+    </div>
+    <!-- /div --> 
+  </div>
+  <!-- /div --> 
+</div>
+<!-- /.content-wrapper --> 
+<script src="style/js/jquery.min.js"></script> 
+<script src="style/js/popper.min.js"></script> 
+<script src="style/js/bootstrap.min.js"></script> 
+<script src="style/revolution/js/jquery.themepunch.tools.min.js"></script> 
+<script src="style/revolution/js/jquery.themepunch.revolution.min.js"></script> 
+<script src="style/revolution/revolution-addons/filmstrip/js/revolution.addon.filmstrip.min.js"></script> 
+<script src="style/revolution/revolution-addons/typewriter/js/revolution.addon.typewriter.min.js"></script> 
+<script src="style/revolution/js/extensions/revolution.extension.actions.min.js"></script> 
+<script src="style/revolution/js/extensions/revolution.extension.carousel.min.js"></script> 
+<script src="style/revolution/js/extensions/revolution.extension.kenburn.min.js"></script> 
+<script src="style/revolution/js/extensions/revolution.extension.layeranimation.min.js"></script> 
+<script src="style/revolution/js/extensions/revolution.extension.migration.min.js"></script> 
+<script src="style/revolution/js/extensions/revolution.extension.navigation.min.js"></script> 
+<script src="style/revolution/js/extensions/revolution.extension.parallax.min.js"></script> 
+<script src="style/revolution/js/extensions/revolution.extension.slideanims.min.js"></script> 
+<script src="style/revolution/js/extensions/revolution.extension.video.min.js"></script>
+<script src="style/js/plugins.js"></script> 
+<script src="style/js/scripts.js"></script> 
+<script>
+	$.backstretch([
+      "style/images/art/bg2.png"
+
+  ], {duration: 5000, fade: 1000});
+</script>
+
+<script>
+      function calculateDaysSince() {
+          const startDate = new Date("2024-11-26T06:30:00"); // Start at 6:30 AM
+          const now = new Date();
+          const diffTime = now - startDate;
+          const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)); // Convert ms to days
+          return diffDays >= 0 ? diffDays : 0;
+      }
+    
+      function getLoveQuote() {
+        const quotes = [
+  "Love is the flower; you've got to let it grow.",
+  "To love and be loved is to feel the sun from both sides.",
+  "Love doesn't make the world go 'round. Love is what makes the ride worthwhile.",
+  "In dreams and in love, there are no impossibilities.",
+  "Being deeply loved by someone gives you strength, while loving someone deeply gives you courage.",
+  "Love is composed of a single soul inhabiting two bodies.",
+  "Where there is love there is life.",
+  "Love is not what you say. Love is what you do.",
+  "A simple 'I love you' means more than money.",
+  "Love recognizes no barriers. It jumps hurdles, leaps fences, penetrates walls to arrive at its destination full of hope.",
+  "Love is a friendship set to music.",
+  "You don't love someone for their looks, or their clothes, or for their fancy car, but because they sing a song only you can hear.",
+  "To love someone is nothing, to be loved by someone is something, but to be loved by the one you love is everything.",
+  "Love is not about how many days, months, or years you’ve been together. It’s about how much you love each other every single day.",
+  "The best thing to hold onto in life is each other.",
+  "I have found the one whom my soul loves.",
+  "You know it’s love when all you want is that person to be happy, even if you’re not part of their happiness.",
+  "Love is like the wind; you can’t see it, but you can feel it.",
+  "You come to love not by finding the perfect person, but by learning to see an imperfect person perfectly.",
+  "There is only one happiness in life: to love and be loved.",
+  "To love and be loved is the greatest happiness of existence.",
+  "True love is rare, and it’s the only thing that gives life real meaning.",
+  "The greatest thing you’ll ever learn is to love and be loved in return.",
+  "Love is not something you find. Love is something that finds you.",
+  "We are most alive when we’re in love.",
+  "Love is a canvas furnished by nature and embroidered by imagination.",
+  "True love begins when nothing is looked for in return.",
+  "You can’t blame gravity for falling in love.",
+  "Love is a game that two can play and both win.",
+  "Love is the only force capable of transforming an enemy into a friend.",
+  "Love looks not with the eyes, but with the mind, and therefore is winged Cupid painted blind.",
+  "Love isn’t something you find. It’s something that finds you.",
+  "If I know what love is, it is because of you.",
+  "Love is a better teacher than duty.",
+  "Love is the whole thing. We are only pieces.",
+  "Love is the poetry of the senses.",
+  "To love oneself is the beginning of a lifelong romance.",
+  "Love does not dominate; it cultivates.",
+  "The way to love anything is to realize that it might be lost.",
+  "When you see the world in her eyes and her eyes everywhere in the world.",
+  "Love is when you meet someone who tells you something new about yourself.",
+  "You are my heart, my life, my one and only thought.",
+  "Love is like a beautiful flower which I may not touch, but whose fragrance makes the garden a place of delight.",
+  "Love is the magician that pulls man out of his own hat.",
+  "The best love is the kind that awakens the soul and makes us reach for more.",
+  "Love is what makes the ride worthwhile.",
+  "The heart wants what it wants. There’s no logic to these things.",
+  "Love is composed of two hearts that beat as one.",
+  "Love is a single soul inhabiting two bodies.",
+  "The most important thing in the world is family and love.",
+  "A life lived in love will never be dull.",
+  "You have bewitched me, body and soul.",
+  "Love is a force more formidable than any other.",
+  "Love is the condition in which the happiness of another person is essential to your own.",
+  "The best proof of love is trust.",
+  "Every love story is beautiful, but ours is my favorite.",
+  "Love is like the wind; you can't see it, but you can feel it.",
+  "Love is not about possession. Love is about appreciation.",
+  "The best love is the one that makes you a better person without changing you into someone other than yourself.",
+  "Where there is great love, there are always miracles.",
+  "Love planted a rose, and the world turned sweet.",
+  "Love is not finding someone to live with; it’s finding someone you can’t live without.",
+  "A kiss is a lovely trick designed by nature to stop speech when words become superfluous.",
+  "Love is the bridge between two hearts.",
+  "You are my today and all of my tomorrows.",
+  "To love is to receive a glimpse of heaven.",
+  "I would rather spend one lifetime with you than face all the ages of this world alone.",
+  "Love is a force that is not only greater than ourselves but also brings out the greatest in ourselves.",
+  "Love is like a lighthouse guiding the soul in the darkest storms.",
+  "Love is not about how much you say 'I love you,' but how much you prove it’s true.",
+  "You may hold my hand for a while, but you hold my heart forever.",
+  "You are every reason, every hope, and every dream I’ve ever had.",
+  "I didn’t choose you. My heart did.",
+  "I love you more today than yesterday, but not as much as tomorrow.",
+  "Then I saw that you were not perfect and I loved you even more.",
+  "You are my today and all of my tomorrows.",
+  "I would rather spend one moment holding you than a lifetime knowing I never could.",
+  "The best thing to hold onto in life is each other.",
+  "My love for you is past the mind, beyond my heart, and into my soul.",
+  "I say it to remind you that you are the best thing that ever happened to me.",
+  "I love you for all that you are, all that you have been, and all that you will be.",
+  "You are my sun, my moon, and all my stars.",
+  "The best love is the kind that awakens the soul and makes us reach for more.",
+  "You are my forever person.",
+  "I would use my last breath to say I love you.",
+  "You’re not my number one; you’re my only one.",
+  "I love you more than yesterday and less than tomorrow.",
+  "Love is when you sit beside someone doing nothing, yet you feel perfectly happy.",
+  // Repeat or extend as needed up to 365
+];
+
+    
+          const now = new Date();
+          const sixThirtyAMToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 6, 30, 0);
+          const sixThirtyAMYesterday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1, 6, 30, 0);
+    
+          // Use today's quote if after 6:30 AM, otherwise use yesterday's
+          const referenceDate = now >= sixThirtyAMToday ? now : sixThirtyAMYesterday;
+          const dayOfYear = Math.floor(
+              (referenceDate - new Date(referenceDate.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24)
+          );
+    
+          return quotes[dayOfYear % quotes.length]; // Loop through quotes if fewer than 365
+      }
+    
+      function updatePage() {
+          document.getElementById("days-number").textContent = "~ " + calculateDaysSince() + " ~";
+          document.getElementById("quote-of-the-day").textContent = `"${getLoveQuote()}"`;
+      }
+    
+      // Run the updates
+      updatePage();
+    
+      // Update every hour to keep it accurate
+      setInterval(updatePage, 1000 * 60 * 60);
+
+
+    </script>
+
+    <script>
+      // ===== Password Gate (SHA-256 hash compare) =====
+    const PASSWORD_HASH = "7c180e3e3bee93dde4c28a4999b4cc3604ee53524c3b245485d41ac36d478c82";
+    const SESSION_KEY = "journal.unlocked";
+
+    async function sha256Hex(str){
+      const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+      return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");
+    }
+    function unlockUI(){
+       document.body.classList.remove("locked");
+  document.body.classList.add("unlocked");
+      document.getElementById("lock").style.display = "none";
+      sessionStorage.setItem(SESSION_KEY, "1");
+    }
+    async function checkUnlock(){
+      if (sessionStorage.getItem(SESSION_KEY) === "1") { unlockUI(); return; }
+      const pwInput = document.getElementById("pw");
+      const err = document.getElementById("err");
+      const enterBtn = document.getElementById("enterBtn");
+      async function tryUnlock(){
+        const hash = await sha256Hex(pwInput.value || "");
+        if (hash === PASSWORD_HASH){ unlockUI(); }
+        else { err.textContent = "Bear and ..."; err.style.display = "block";
+ pwInput.select(); }
+      }
+      enterBtn.addEventListener("click", tryUnlock);
+      pwInput.addEventListener("keydown", e=>{ if(e.key==="Enter") tryUnlock(); });
+      pwInput.focus();
+    }
+
+      document.addEventListener("DOMContentLoaded", checkUnlock);
+
+    </script>
+</body>
+</html>

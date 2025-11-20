@@ -64,17 +64,16 @@
   <!-- Password Overlay -->
   <div class="overlay" id="lock">
     <div class="panel">
-      <h2>Enter Password</h2>
       <div class="field">
         <input id="pw" type="password" placeholder="Password" autocomplete="current-password" />
         <button id="enterBtn">Unlock</button>
       </div>
       <div id="err" class="error"></div>
-      <div class="hint">Access persists for this tab until it’s closed.</div>
+      <!-- <div class="hint">Access persists for this tab until it’s closed.</div> -->
     </div>
   </div>
 
-  <div class="wrap">
+  <div class="wrap" style="display: none;">
     <h1>Daily Journal</h1>
 
     <!-- Top reader -->
@@ -129,7 +128,7 @@
       async function tryUnlock(){
         const hash = await sha256Hex(pwInput.value || "");
         if (hash === PASSWORD_HASH){ unlockUI(); init(); }
-        else { err.textContent = "Incorrect password"; pwInput.select(); }
+        else { err.textContent = "Bear and ..."; pwInput.select(); }
       }
       enterBtn.addEventListener("click", tryUnlock);
       pwInput.addEventListener("keydown", e=>{ if(e.key==="Enter") tryUnlock(); });
